@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Varyant Fırın Cafe — Menü</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #faf9f7;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    /* ---- MENU PAGE ---- */
+    #menu-page { display: block; }
+    #admin-page { display: none; }
+
+    .menu-wrap { max-width: 480px; margin: 0 auto; padding-bottom: 4rem; }
+
+    .menu-header {
+      text-align: center;
+      padding: 2.5rem 1rem 1.5rem;
+      border-bottom: 1px solid #e8e5df;
+    }
+    .menu-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      font-weight: 600;
+      color: #1a1a1a;
+      letter-spacing: 0.02em;
+      margin-bottom: 4px;
+    }
+    .menu-header p {
+      font-size: 12px;
+      color: #888;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .category-nav {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      padding: 1.25rem 1rem;
+      flex-wrap: wrap;
+    }
+    .cat-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1px solid #d0cdc7;
+      background: transparent;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .cat-btn.active {
+      background: #1a1a1a;
+      color: #fff;
+      border-color: #1a1a1a;
+    }
+
+    .section { padding: 0 1.25rem 2rem; }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 500;
+      color: #1a1a1a;
+      margin: 1.5rem 0 1rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e8e5df;
+    }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 11px 0;
+      border-bottom: 1px solid #f0ede8;
+    }
+    .item:last-child { border-bottom: none; }
+    .item-name { font-size: 15px; color: #1a1a1a; }
+    .item-desc { font-size: 12px; color: #999; margin-top: 2px; }
+    .item-price { font-size: 14px; font-weight: 500; color: #1a1a1a; white-space: nowrap; margin-left: 12px; }
+
+    .menu-footer {
+      text-align: center;
+      padding: 1.5rem 1rem 0.5rem;
+      font-size: 11px;
+      color: #bbb;
+    }
+    .admin-link {
+      display: block;
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 11px;
+      color: #ccc;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .admin-link:hover { color: #999; }
+
+    .hidden { display: none !important; }
+
+    /* ---- ADMIN PAGE ---- */
+    .admin-wrap { max-width: 520px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e8e5df;
+    }
+    .admin-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 500;
+    }
+    .back-btn {
+      font-size: 13px;
+      color: #888;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px 0;
+    }
+    .back-btn:hover { color: #1a1a1a; }
+
+    .login-box {
+      background: #fff;
+      border: 1px solid #e8e5df;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 360px;
+      margin: 3rem auto;
+    }
+    .login-box h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 12px; color: #888; margin-bottom: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
+    .form-group input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #e0ddd8;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      background: #faf9f7;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus { border-color: #1a1a1a; }
+    .login-btn, .save-btn, .add-btn {
+      width: 100%;
+      padding: 11px;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: opacity 0.15s;
+    }
+    .login-btn:hover, .save-btn:hover, .add-btn:hover { opacity: 0.85; }
+    .error-msg { color: #c0392b; font-size: 13px; text-align: center; margin-top: 0.75rem; }
+
+    .admin-section { margin-bottom: 2.5rem; }
+    .admin-section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e8e5df;
+    }
+
+    .admin-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0ede8;
+    }
+    .admin-item:last-child { border-bottom: none; }
+    .admin-item input[type="text"] {
+      flex: 1;
+      padding: 7px 10px;
+      border: 1px solid #e0ddd8;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      background: #faf9f7;
+      outline: none;
+    }
+    .admin-item input[type="text"]:focus { border-color: #1a1a1a; }
+    .price-input { max-width: 80px !important; }
+    .del-btn {
+      background: none;
+      border: 1px solid #e0ddd8;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 13px;
+      color: #c0392b;
+      cursor: pointer;
+    }
+    .del-btn:hover { background: #fdf0ee; }
+
+    .add-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .add-row input {
+      flex: 1;
+      min-width: 120px;
+      padding: 8px 12px;
+      border: 1px solid #e0ddd8;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      background: #faf9f7;
+      outline: none;
+    }
+    .add-row input:focus { border-color: #1a1a1a; }
+    .add-row button {
+      padding: 8px 18px;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .save-bar {
+      position: sticky;
+      bottom: 0;
+      background: #faf9f7;
+      border-top: 1px solid #e8e5df;
+      padding: 1rem 0;
+      margin-top: 2rem;
+    }
+    .saved-msg { text-align: center; font-size: 13px; color: #27ae60; margin-top: 8px; display: none; }
+  </style>
+</head>
+<body>
+
+<!-- ======== MENU PAGE ======== -->
+<div id="menu-page">
+  <div class="menu-wrap">
+    <div class="menu-header">
+      <h1>Varyant Fırın Cafe</h1>
+      <p>Dijital Menü</p>
+    </div>
+
+    <div class="category-nav">
+      <button class="cat-btn active" onclick="filter('all', this)">Tümü</button>
+      <button class="cat-btn" onclick="filter('ekmek', this)">Ekmek & Poğaça</button>
+      <button class="cat-btn" onclick="filter('tatli', this)">Tatlılar & Pastalar</button>
+      <button class="cat-btn" onclick="filter('icecek', this)">İçecekler</button>
+    </div>
+
+    <div id="menu-content"></div>
+
+    <div class="menu-footer">Fiyatlarımız KDV dahildir</div>
+    <span class="admin-link" onclick="showAdmin()">⚙</span>
+  </div>
+</div>
+
+<!-- ======== ADMIN PAGE ======== -->
+<div id="admin-page">
+  <div class="admin-wrap">
+
+    <!-- LOGIN -->
+    <div id="login-section">
+      <div class="login-box">
+        <h3>Yönetim Girişi</h3>
+        <div class="form-group">
+          <label>Şifre</label>
+          <input type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()" />
+        </div>
+        <button class="login-btn" onclick="doLogin()">Giriş Yap</button>
+        <div class="error-msg" id="login-error"></div>
+        <div style="text-align:center; margin-top:1rem;">
+          <button class="back-btn" onclick="showMenu()">← Menüye Dön</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDITOR -->
+    <div id="editor-section" style="display:none;">
+      <div class="admin-header">
+        <h2>Menü Yönetimi</h2>
+        <button class="back-btn" onclick="showMenu()">← Menüye Dön</button>
+      </div>
+      <div id="admin-content"></div>
+      <div class="save-bar">
+        <button class="save-btn" onclick="saveMenu()">Değişiklikleri Kaydet</button>
+        <div class="saved-msg" id="saved-msg">✓ Menü güncellendi!</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ---- DEFAULT MENU DATA ----
+  const DEFAULT_DATA = {
+    ekmek: {
+      title: "Ekmek & Poğaça",
+      items: [
+        { name: "Simit", desc: "Günlük taze", price: "15" },
+        { name: "Peynirli Poğaça", desc: "Fırından yeni çıkmış", price: "30" },
+        { name: "Zeytinli Poğaça", desc: "Tam buğday hamuru", price: "30" },
+        { name: "Köy Ekmeği", desc: "Taş fırın, 500g", price: "50" },
+        { name: "Açma", desc: "Tereyağlı, günlük", price: "25" }
+      ]
+    },
+    tatli: {
+      title: "Tatlılar & Pastalar",
+      items: [
+        { name: "Çikolatalı Sufle", desc: "Sıcak servis", price: "75" },
+        { name: "Cheesecake", desc: "Mevsim meyveli", price: "85" },
+        { name: "Mozaik Pasta", desc: "Dilim", price: "60" },
+        { name: "Fıstıklı Baklava", desc: "Antep fıstığı", price: "70" }
+      ]
+    },
+    icecek: {
+      title: "İçecekler",
+      items: [
+        { name: "Türk Kahvesi", desc: "Sade / az / orta / tatlı", price: "40" },
+        { name: "Çay", desc: "Demlik çay", price: "20" },
+        { name: "Filtre Kahve", desc: "Günlük öğütülmüş", price: "55" },
+        { name: "Limonata", desc: "Taze sıkılmış", price: "50" },
+        { name: "Ayran", desc: "Ev yapımı", price: "25" }
+      ]
+    }
+  };
+
+  const ADMIN_PASSWORD = "varyant2024";
+  const STORAGE_KEY = "varyant_menu";
+
+  function loadData() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_DATA));
+    } catch(e) {
+      return JSON.parse(JSON.stringify(DEFAULT_DATA));
+    }
+  }
+
+  function saveData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  // ---- RENDER MENU ----
+  function renderMenu() {
+    const data = loadData();
+    const container = document.getElementById('menu-content');
+    container.innerHTML = '';
+    ['ekmek','tatli','icecek'].forEach(cat => {
+      const sec = data[cat];
+      const div = document.createElement('div');
+      div.className = 'section';
+      div.id = 'sec-' + cat;
+      div.innerHTML = `<div class="section-title">${sec.title}</div>` +
+        sec.items.map(i => `
+          <div class="item">
+            <div>
+              <div class="item-name">${i.name}</div>
+              ${i.desc ? `<div class="item-desc">${i.desc}</div>` : ''}
+            </div>
+            <div class="item-price">${i.price} ₺</div>
+          </div>`).join('');
+      container.appendChild(div);
+    });
+  }
+
+  function filter(cat, btn) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const ids = ['sec-ekmek','sec-sec-tatli','sec-icecek'];
+    if (cat === 'all') {
+      ['sec-ekmek','sec-tatli','sec-icecek'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.classList.remove('hidden');
+      });
+    } else {
+      ['ekmek','tatli','icecek'].forEach(c => {
+        const el = document.getElementById('sec-' + c);
+        if(el) el.classList.toggle('hidden', c !== cat);
+      });
+    }
+  }
+
+  // ---- ADMIN ----
+  function showAdmin() {
+    document.getElementById('menu-page').style.display = 'none';
+    document.getElementById('admin-page').style.display = 'block';
+    document.getElementById('login-section').style.display = 'block';
+    document.getElementById('editor-section').style.display = 'none';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('login-error').textContent = '';
+  }
+
+  function showMenu() {
+    document.getElementById('menu-page').style.display = 'block';
+    document.getElementById('admin-page').style.display = 'none';
+    renderMenu();
+  }
+
+  function doLogin() {
+    const pw = document.getElementById('pw-input').value;
+    if (pw === ADMIN_PASSWORD) {
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('editor-section').style.display = 'block';
+      renderEditor();
+    } else {
+      document.getElementById('login-error').textContent = 'Şifre yanlış, tekrar deneyin.';
+    }
+  }
+
+  function renderEditor() {
+    const data = loadData();
+    const container = document.getElementById('admin-content');
+    container.innerHTML = '';
+    ['ekmek','tatli','icecek'].forEach(cat => {
+      const sec = data[cat];
+      const div = document.createElement('div');
+      div.className = 'admin-section';
+      div.innerHTML = `<div class="admin-section-title">${sec.title}</div>
+        <div id="admin-items-${cat}">
+          ${sec.items.map((item, i) => `
+            <div class="admin-item" id="row-${cat}-${i}">
+              <input type="text" value="${item.name}" placeholder="Ürün adı" data-cat="${cat}" data-idx="${i}" data-field="name" onchange="updateItem(this)" />
+              <input type="text" value="${item.desc}" placeholder="Açıklama" data-cat="${cat}" data-idx="${i}" data-field="desc" onchange="updateItem(this)" />
+              <input type="text" class="price-input" value="${item.price}" placeholder="Fiyat" data-cat="${cat}" data-idx="${i}" data-field="price" onchange="updateItem(this)" />
+              <button class="del-btn" onclick="deleteItem('${cat}', ${i})">Sil</button>
+            </div>`).join('')}
+        </div>
+        <div class="add-row">
+          <input type="text" id="new-name-${cat}" placeholder="Ürün adı" />
+          <input type="text" id="new-desc-${cat}" placeholder="Açıklama" />
+          <input type="text" id="new-price-${cat}" placeholder="Fiyat" style="max-width:80px" />
+          <button onclick="addItem('${cat}')">+ Ekle</button>
+        </div>`;
+      container.appendChild(div);
+    });
+  }
+
+  let editData = null;
+
+  function updateItem(input) {
+    if (!editData) editData = loadData();
+    const cat = input.dataset.cat;
+    const idx = parseInt(input.dataset.idx);
+    const field = input.dataset.field;
+    editData[cat].items[idx][field] = input.value;
+  }
+
+  function deleteItem(cat, idx) {
+    if (!editData) editData = loadData();
+    editData[cat].items.splice(idx, 1);
+    saveData(editData);
+    renderEditor();
+  }
+
+  function addItem(cat) {
+    if (!editData) editData = loadData();
+    const name = document.getElementById('new-name-' + cat).value.trim();
+    const desc = document.getElementById('new-desc-' + cat).value.trim();
+    const price = document.getElementById('new-price-' + cat).value.trim();
+    if (!name || !price) return alert('Ürün adı ve fiyat zorunludur.');
+    editData[cat].items.push({ name, desc, price });
+    saveData(editData);
+    renderEditor();
+  }
+
+  function saveMenu() {
+    if (editData) saveData(editData);
+    const msg = document.getElementById('saved-msg');
+    msg.style.display = 'block';
+    setTimeout(() => msg.style.display = 'none', 2500);
+  }
+
+  // ---- INIT ----
+  renderMenu();
+</script>
+</body>
+</html>
