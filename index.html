@@ -25,20 +25,25 @@
     .cat-btn { font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 6px 16px; border-radius: 999px; border: 1px solid #d0cdc7; background: transparent; color: #666; cursor: pointer; transition: all 0.15s; }
     .cat-btn.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
 
-    .section { padding: 0 1.25rem 2rem; }
+    .section { padding: 0 1rem 2rem; }
     .section-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: #1a1a1a; margin: 1.5rem 0 1rem; padding-bottom: 8px; border-bottom: 1px solid #e8e5df; }
 
-    .item { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid #f0ede8; gap: 12px; }
-    .item:last-child { border-bottom: none; }
-    .item.sold-out { opacity: 0.5; }
-    .item-img { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: #f0ede8; }
-    .item-img-placeholder { width: 64px; height: 64px; border-radius: 8px; flex-shrink: 0; background: #f0ede8; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-    .item-info { flex: 1; }
-    .item-name { font-size: 15px; color: #1a1a1a; }
+    /* KART GRID */
+    .items-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .item { display: flex; flex-direction: column; border-radius: 12px; overflow: hidden; background: #fff; border: 1px solid #ede9e3; }
+    .item.sold-out { opacity: 0.55; }
+
+    .item-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; background: #f0ede8; }
+    .item-img-placeholder { width: 100%; aspect-ratio: 4/3; background: #f0ede8; display: flex; align-items: center; justify-content: center; font-size: 36px; }
+
+    .item-body { padding: 10px 10px 12px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .item-name { font-size: 14px; font-weight: 500; color: #1a1a1a; line-height: 1.3; }
     .item-name.crossed { text-decoration: line-through; color: #aaa; }
-    .item-desc { font-size: 12px; color: #999; margin-top: 2px; }
-    .sold-out-tag { display: inline-block; font-size: 10px; background: #f0ede8; color: #999; border-radius: 4px; padding: 1px 6px; margin-top: 4px; letter-spacing: 0.04em; }
-    .item-price { font-size: 14px; font-weight: 500; color: #1a1a1a; white-space: nowrap; }
+    .item-desc { font-size: 11px; color: #999; line-height: 1.3; }
+    .item-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 8px; }
+    .item-price { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+    .sold-out-tag { display: inline-block; font-size: 10px; background: #f0ede8; color: #999; border-radius: 4px; padding: 2px 7px; letter-spacing: 0.04em; }
 
     .menu-footer { text-align: center; padding: 1.5rem 1rem 0.5rem; font-size: 11px; color: #bbb; }
     .admin-link { display: block; text-align: center; margin-top: 1rem; font-size: 11px; color: #ccc; cursor: pointer; }
@@ -254,14 +259,16 @@
           ${i.img
             ? `<img class="item-img" src="${i.img}" alt="${i.name}" loading="lazy" />`
             : `<div class="item-img-placeholder">🍞</div>`}
-          <div class="item-info">
+          <div class="item-body">
             <div class="item-name${i.soldOut ? ' crossed' : ''}">${i.name}</div>
             ${i.desc ? `<div class="item-desc">${i.desc}</div>` : ''}
-            ${i.soldOut ? `<span class="sold-out-tag">Tükendi</span>` : ''}
+            <div class="item-footer">
+              <div class="item-price">${i.price} ₺</div>
+              ${i.soldOut ? `<span class="sold-out-tag">Tükendi</span>` : ''}
+            </div>
           </div>
-          <div class="item-price">${i.price} ₺</div>
         </div>`).join('');
-      div.innerHTML = `<div class="section-title">${sec.title}</div>${items}`;
+      div.innerHTML = `<div class="section-title">${sec.title}</div><div class="items-grid">${items}</div>`;
       container.appendChild(div);
     });
   }
